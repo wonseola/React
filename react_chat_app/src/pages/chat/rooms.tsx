@@ -1,16 +1,20 @@
 import styled from "styled-components";
+import { Chat } from "./chatInput";
 
 
 const Wrapper = styled.div`
-border-right:1px solid black;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
 `
+
 
 export const Rooms = () => {
 
 
     return (
-        <>
-            <Wrapper>roomsddddddd</Wrapper>
-        </>
+        <Wrapper>
+            <Chat />
+        </Wrapper>
     );
 }

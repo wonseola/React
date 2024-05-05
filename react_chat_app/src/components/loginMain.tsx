@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import ReactEmojis from "@souhaildev/reactemojis";
-import React, { useState } from "react";
-import { FirebaseError } from "@firebase/util";
-import { signInAnonymously } from "firebase/auth";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "@firebase/firestore";
+import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router";
+import { get, ref, serverTimestamp, set } from "firebase/database";
+import { rtdb } from "../firebase";
 
 
 const Loginlayout = styled.div`
@@ -83,43 +81,46 @@ export const SetNickname = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [name, setName] = useState("");
-    const [login, setLogin] = useState(false);
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {
-            target: { name, value },
-        } = e;
-        if (name === "name") {
-            setName(value);
-        }
+    const Userlist = () => {
+        const userRef = ref(rtdb, 'users/' + name);
+        const colors = ['Coral', 'Darkseagreen', 'Darksalmon', 'Lightskyblue', 'Steelblue'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
+        set(userRef, {
+            users: name,
+            color: randomColor,
+            createAt: serverTimestamp(),
+        })
     }
+
+    const checkIfUserExists = async (name: string) => {
+        const userRef = ref(rtdb, 'users/' + name);
+        const snapshot = await get(userRef);
+        return snapshot.exists();
+    };
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError("");
-        if (!name) {
-            setError("닉네임이 없어요..!");
-            return;
-        }
-        try {
-            setLogin(true);
-            const res = await signInAnonymously(auth);
-            await setDoc(doc(db, "users", name), {
-                name,
-                id: res.user.uid,
-            });
-
-            navigate("/chat");
-        }
-        catch (e) {
-            if (e instanceof FirebaseError) {
-                setError(e.message);
-                setLogin(false);
+        if (name.length >= 10 || name.length == 0) {
+            setError("닉네임을 10자 이하로 설정해주세요");
+            setName("");
+            return
+        } else {
+            localStorage.setItem('userName', name);
+            const exists = await checkIfUserExists(name);
+            if (exists) {
+                setError("중복 닉넴");
+                setName("");
+            } else {
+                Userlist();
+                navigate("/list");
             }
         }
     }
-
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+    };
 
     return (
         <Loginlayout>
@@ -133,13 +134,14 @@ export const SetNickname = () => {
                     <h2 style={{ fontSize: "50px", fontWeight: "500" }}>
                         랜챗이름 머하지</h2>
                     <h2 style={{ fontSize: "20px", marginTop: "10px" }}>
-                        {login ? "Loading..." : "닉네임을 입력해주세요!"}
+                        닉네임을 입력해주세요!
                     </h2>
                 </Textdiv>
                 <NickDiv>
                     <div></div>
                     <form onSubmit={handleLogin}>
-                        <Input type="text" onChange={onChange} name="name" />
+                        <Input type="text" value={name} onChange={handleInputChange} name="name" />
+
                         <Btn>&rarr;</Btn>
 
                     </form>

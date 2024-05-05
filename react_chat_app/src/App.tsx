@@ -4,9 +4,8 @@ import reset from "styled-reset";
 import './App.css'
 import { Rooms } from "./pages/chat/rooms";
 import { Login } from "./pages/Login";
-import { Menu } from "./pages/chat/menu";
+import { List } from "./pages/chat/list";
 import { Layout } from "./pages/chat/layout";
-import { Chat } from "./pages/chat/chat";
 
 
 
@@ -16,8 +15,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "chat", element: <Chat /> },
-      { path: "menu", element: <Menu /> },
+      { path: "list", element: <List /> },
       { path: "rooms", element: <Rooms /> },
     ]
   },

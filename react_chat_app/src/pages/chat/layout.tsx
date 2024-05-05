@@ -1,15 +1,14 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Loginuser } from "../../components/loginuser";
-import { auth, db } from "../../firebase";
-import { useEffect } from "react";
-import { deleteField, doc, updateDoc } from "firebase/firestore";
+import { Loginuser } from "../../components/userInfo";
+
 
 
 const Div = styled.div`
     height:100%;
     display: flex;
     align-items: center;
+    justify-content:center;
     margin:auto;
 `
 
@@ -19,16 +18,20 @@ grid-template-columns: 1fr 13fr;
 height:90%;
 gap:20px;
 background-color:white;
-background-color:#a7aedd89;
+background-color:#fff;
 `;
 
 const Menu = styled.div`
 display: flex;
 flex-direction:column;
-align-items:center;
 gap:10px;
 padding-top:20px;
 border-right:1px solid black;
+justify-content:center;
+align-items: center;
+@media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const Linkto = styled(Link)`
@@ -50,46 +53,26 @@ transition: background-color 0.3s ;
   &:hover {
     background-color: #ffb032;
 }
-
+margin-top: ${props => props.className === "logout" ? "auto" : "0"};
 `;
 const Menutext = styled.h2`
     font-size:20px;
     /* margin-left:20px; */
     color:black;
-    @media (max-width: 800px) {
-    display: none;
-  }
+    
 `;
 
 
 export const Layout = () => {
     const navigator = useNavigate();
 
-
-    const Deleteuser = async () => {
-        const user = auth.currentUser;
-        const name = localStorage.getItem("userName");
-        console.log(name);
-        if (name) {
-            const ref = doc(db, "users", name);
-            try {
-                await user?.delete();
-                await updateDoc(ref, { [name]: deleteField(), });
-                navigator("/");
-            } catch (error) {
-                console.error("Error deleting user:", error);
-            }
-        }
-
-    }
-
     const onLogOut = async (text: string) => {
         const ok = confirm(text);
         if (ok) {
-            auth.signOut();
-            Deleteuser();
+            navigator("/");
         }
     };
+
 
 
     return (
@@ -102,22 +85,17 @@ export const Layout = () => {
                             <Menutext>Change Name</Menutext>
                         </MenuItem>
                     </Linkto>
-                    <Linkto to="/rooms">
+                    {/* <Linkto to="rooms" >
                         <MenuItem>
-                            <Menutext>Rooms</Menutext>
+                            <Menutext>Create Room</Menutext>
+                        </MenuItem>
+                    </Linkto> */}
+                    <Linkto to="list" >
+                        <MenuItem>
+                            <Menutext>Room List</Menutext>
                         </MenuItem>
                     </Linkto>
-                    <Linkto to="/chat">
-                        <MenuItem>
-                            <Menutext>Chat</Menutext>
-                        </MenuItem>
-                    </Linkto>
-                    <Linkto to="/menu">
-                        <MenuItem>
-                            <Menutext>Menu</Menutext>
-                        </MenuItem>
-                    </Linkto>
-                    <MenuItem onClick={() => onLogOut("대화 내용이 모두 사라집니다!")}>
+                    <MenuItem className="logout" onClick={() => onLogOut("대화 내용이 모두 사라집니다!")}>
                         <Menutext>LOGOUT</Menutext>
                     </MenuItem>
                 </Menu>
