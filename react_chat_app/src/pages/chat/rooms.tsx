@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 `
 
 
-export const Rooms = () => {
+export const Rooms1 = () => {
 
 
     return (

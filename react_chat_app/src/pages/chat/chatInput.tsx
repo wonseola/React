@@ -1,14 +1,12 @@
 import styled from "styled-components"
 import EmojiPicker from "emoji-picker-react"
 import { useState } from "react"
-import { Loginuser } from "../../components/userInfo"
 
 
 const Chatview = styled.div`
     flex: 2;
     display: flex;
     flex-direction: column;
-    border-left:1px solid black;
 `
 
 const Bottom = styled.div`
@@ -16,7 +14,7 @@ const Bottom = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid black;
+    /* border-top: 1px solid black; */
     gap: 20px;
     margin-top: auto;
 `
@@ -51,6 +49,11 @@ const Picker = styled.div`
   bottom: 50px;
 `
 
+
+const Icon = styled.img`
+  width:40px;
+`
+
 const Top = styled.div`
       padding: 20px;
     flex: 1;
@@ -61,9 +64,7 @@ const Top = styled.div`
     overflow-x: hidden;
 `
 
-const Icon = styled.img`
-  width:40px;
-`
+
 
 export const Chat = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -78,16 +79,6 @@ export const Chat = () => {
 
   return (
     <Chatview>
-      <Top>
-        <div className="message">
-          <Loginuser />
-          <div className="messages">
-            <p>asdfadfadfadfadfadsfadfad</p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-
-      </Top>
       <Bottom>
         <Message type="text"
           placeholder="Type a message . . ."

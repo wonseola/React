@@ -114,7 +114,7 @@ export const SetNickname = () => {
                 setName("");
             } else {
                 Userlist();
-                navigate("/list");
+                navigate("/chat");
             }
         }
     }

@@ -2,22 +2,18 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import './App.css'
-import { Rooms } from "./pages/chat/rooms";
 import { Login } from "./pages/Login";
-import { List } from "./pages/chat/list";
-import { Layout } from "./pages/chat/layout";
+import { Layout } from "./pages/layout";
+import { Messages } from "./pages/message";
 
 
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
   {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { path: "list", element: <List /> },
-      { path: "rooms", element: <Rooms /> },
-    ]
+    path: "/chat", element: <Layout />, children: [{
+      path: ":roomName", element: <Messages />
+    }]
   },
 ]);
 
