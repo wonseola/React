@@ -11,6 +11,7 @@ border-left:solid 1px black;
 `
 
 export const Messages = () => {
+
     return (
         <Contents>
             <Chatcontent />

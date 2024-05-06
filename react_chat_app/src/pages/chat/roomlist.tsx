@@ -4,7 +4,8 @@ import { Createroom } from "../../components/createRoom";
 import { Myinfo } from "../../components/userstate";
 import { rtdb } from "../../firebase";
 import { onValue, ref } from "firebase/database";
-import { Link } from "react-router-dom";
+import { Logouticon } from "../../components/logout";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Wrapper = styled.div`
@@ -44,9 +45,10 @@ const RoomItem = styled.div`
 `;
 
 
-interface Room {
+export interface Room {
     id: string;
     name: string;
+    createAt: number;
 }
 
 export const List = () => {
@@ -58,15 +60,21 @@ export const List = () => {
 
     const handleRoomItemClick = (room: Room) => {
         setSelectedRoom(room);
+
     };
+
+
+
+
     useEffect(() => {
         const fetchRooms = async () => {
             const roomsRef = ref(rtdb, 'rooms/');
             onValue(roomsRef, (snapshot) => {
                 const roomData = snapshot.val();
                 if (roomData) {
-                    const roomList = Object.keys(roomData).map((room) => ({
+                    const roomList = Object.keys(roomData).map((room, time) => ({
                         name: room,
+                        createAt: time,
                         ...roomData[room],
                     }));
                     setRooms(roomList);
@@ -75,6 +83,8 @@ export const List = () => {
         };
         fetchRooms();
     }, []);
+
+
 
 
     return (
@@ -100,18 +110,27 @@ export const List = () => {
                         <Createroom onSubmit={() => setAddMode(false)} />
                     </>
                 ) : (
-                    <div>{rooms.map((room) => (
-                        <RoomItem key={room.id} onClick={() => handleRoomItemClick(room)}>{room.id}</RoomItem>
-                    ))}</div>
+                    <div>
+                        {rooms.map((room) => (
+                            <RoomItem key={room.name}
+                                onClick={() => handleRoomItemClick(room)}
+                            >
+                                {room.name}
+                            </RoomItem>
+                        ))}
+                    </div>
                 )}
+                <Link to={`/chat/${selectedRoom?.createAt}`}>
+
+                    <button>asdf</button></Link>
             </Listwrapper>
 
+            <Logouticon />
             <div>
-                <h2>선택된 방 정보:</h2>
                 {selectedRoom && (
                     <div>
                         <p>방 name: {selectedRoom.name}</p>
-                        <Link to={`/rooms/${selectedRoom.id}`}>방으로 이동</Link>
+                        <p>방 Id: {selectedRoom.createAt}</p>
                     </div>
                 )}
             </div>

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ReactEmojis from "@souhaildev/reactemojis";
 import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router";
 import { get, ref, serverTimestamp, set } from "firebase/database";
@@ -126,8 +125,8 @@ export const SetNickname = () => {
         <Loginlayout>
             <Wrapper>
                 <Emoji>
-                    <ReactEmojis emoji="👋" emojiStyle="2" />
-                    <ReactEmojis emoji="😎" emojiStyle="2" />
+                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Beating%20Heart.png" alt="Beating Heart" width="80" height="80" />
+                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Hand%20Over%20Mouth.png" alt="Face with Hand Over Mouth" width="80" height="80" />
                 </Emoji>
 
                 <Textdiv>

@@ -11,9 +11,8 @@ import { Messages } from "./pages/message";
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
   {
-    path: "/chat", element: <Layout />, children: [{
-      path: ":roomName", element: <Messages />
-    }]
+    path: "/chat", element: <Layout />,
+    children: [{ path: "*", element: <Messages /> }]
   },
 ]);
 

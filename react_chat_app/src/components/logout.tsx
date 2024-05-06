@@ -23,12 +23,12 @@ const Icon = styled.img`
     height: 70px;
 `
 export const Logouticon = () => {
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     const onLogOut = async (text: string) => {
         const ok = confirm(text);
         if (ok) {
-            navigator("/");
+            navigate("/");
         }
     };
 

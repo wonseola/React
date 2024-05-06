@@ -5,14 +5,13 @@ import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAtW4hcGcLXYMEp9ijIWLV528dj7sWoeRU",
-    authDomain: "superchat-80267.firebaseapp.com",
-    databaseURL: "https://superchat-80267-default-rtdb.firebaseio.com",
-    projectId: "superchat-80267",
-    storageBucket: "superchat-80267.appspot.com",
-    messagingSenderId: "1086771148059",
-    appId: "1:1086771148059:web:58979a9db92982e3680fbe",
-    measurementId: "G-J81W3CZMX3"
+    apiKey: "AIzaSyAOaF2oU8RlBmg4RpQcn8oQZcTaI0xIins",
+    authDomain: "bom-random.firebaseapp.com",
+    databaseURL: "https://bom-random-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "bom-random",
+    storageBucket: "bom-random.appspot.com",
+    messagingSenderId: "638764103869",
+    appId: "1:638764103869:web:60ec5a50cb5814a6601fd4"
 };
 
 const app = initializeApp(firebaseConfig);

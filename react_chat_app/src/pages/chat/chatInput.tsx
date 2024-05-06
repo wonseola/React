@@ -54,17 +54,6 @@ const Icon = styled.img`
   width:40px;
 `
 
-const Top = styled.div`
-      padding: 20px;
-    flex: 1;
-    overflow: scroll;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-x: hidden;
-`
-
-
 
 export const Chat = () => {
   const [open, setOpen] = useState<boolean>(false);

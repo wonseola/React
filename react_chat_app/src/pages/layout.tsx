@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { List } from "./chat/roomlist";
 import { Messages } from "./message";
-import { Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import { UserInfo } from "../components/aa";
 
 
 
@@ -34,15 +36,13 @@ box-shadow: 0px 0px 15px -2px #2d2b2b60;
 
 export const Layout = () => {
 
-
-
+    const param = useParams();
+    console.log(param);
     return (
         <Div>
             <Wrapper>
                 <List />
-                {/* <Link to=":roomName"> */}
-                {/* </Link> */}
-                <Messages />
+                <Outlet />
             </Wrapper>
         </Div>
     )
