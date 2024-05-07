@@ -100,6 +100,7 @@ export const SetNickname = () => {
     }
 
 
+
     const checkIfUserExists = async (name: string) => {
         const userRef = ref(rtdb, 'users/' + name);
         const snapshot = await get(userRef);
@@ -108,8 +109,8 @@ export const SetNickname = () => {
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (name.length >= 10 || name.length == 0) {
-            setError("닉네임을 10자 이하로 설정해주세요");
+        if (name.length >= 20 || name.length == 0) {
+            setError("닉네임을 20자 이하로 설정해주세요");
             setName("");
             return
         } else {

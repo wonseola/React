@@ -22,8 +22,8 @@ margin-top: ${props => props.className === "logout" ? "auto" : "0"};
 `;
 
 const Icon = styled.img`
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
 `
 
 
@@ -49,6 +49,7 @@ export const Logouticon = () => {
                 const userData: boolean = snapshot.val();
                 if (userData === false) {
                     remove(offlineRef);
+                    localStorage.removeItem("userName");
                 }
             });
             outUser();
@@ -58,7 +59,7 @@ export const Logouticon = () => {
 
     return (
         <>
-            <Logout className="logout" onClick={() => onLogOut("대화 내용이 모두 사라집니다!")}>
+            <Logout className="logout" onClick={() => onLogOut("이건 로그아웃이다")}>
                 <Icon src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Back%20Arrow.png" />
             </Logout>
         </>

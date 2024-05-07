@@ -134,15 +134,14 @@ export const List = () => {
                 ) : (
                     <RoomList>
                         {rooms.map((room) => (
-                            <Linkto to={`/chat/${selectedRoom?.id}`}>
-                                <RoomItem key={room.id}
+                            <Linkto key={room.id} to={`/chat/${room.id}`}>
+                                <RoomItem
                                     onClick={() => handleRoomItemClick(room)}
                                     selected={selectedRoom ? selectedRoom.id === room.id : false}
                                 >
                                     {room.name}
                                 </RoomItem>
                             </Linkto>
-
                         ))}
                     </RoomList>
                 )}

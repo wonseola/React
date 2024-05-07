@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
     flex-direction:column;
     display: flex;
-    background-color:tan;
+    /* background-color:tan; */
     align-items: center;
     height: 100%;
-    gap: 20px;
+    gap: 20px;    
+    max-height:60vh;
+    height: 60vh;
 `;
 
 const Text = styled.h2`
@@ -57,6 +59,7 @@ const Form = styled.form`
     flex-direction:column;
     display: flex;
     gap: 20px;
+    
 `;
 
 interface CreateroomProps {

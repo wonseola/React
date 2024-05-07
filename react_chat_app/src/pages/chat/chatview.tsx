@@ -8,13 +8,13 @@ const Wrapper = styled.div`
     background-color:#fef9ec8e;
     overflow-y:scroll;
     max-height:700px;
+    scroll-behavior: smooth;
     `;
 
 
 const Textdiv = styled.div`
     display: flex;
-    flex-direction: column-reverse; /* 역순으로 정렬 */
-    overflow-y: auto; /* 내용이 넘치면 스크롤이 생기도록 */
+    padding-top:5px;
     
 `
 const Text = styled.span`
@@ -53,12 +53,11 @@ export const Chatcontent = () => {
         });
     }, [id]);
 
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for the bottom of the messages div
+    const endRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Textdiv가 업데이트될 때마다 스크롤을 맨 아래로 이동
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        if (endRef.current) {
+            endRef.current.scrollTop = endRef.current.scrollHeight;
         }
     }, [message]);
 
@@ -74,7 +73,6 @@ export const Chatcontent = () => {
                 }
                 ));
 
-                messages.sort((a, b) => a.createAt - b.createAt);
                 setMessage(messages);
             } else {
                 setMessage([]);
@@ -83,15 +81,16 @@ export const Chatcontent = () => {
     }, [id]);
 
     return (
-        <Wrapper className="message">
-            <h2>참여중인 사람 : {onlineuser.join(", ")} </h2> {/* 로그아웃 테스트하이 */}
+        <Wrapper className="message" ref={endRef}>
+            <h2>참여중인 사람 : {onlineuser.join(", ")} </h2>
 
             {message.map((msg, index) => (
-                <Textdiv key={index} ref={messagesEndRef}>
+                <Textdiv key={index} >
                     <Text>{msg.user}: {msg.message}</Text>
                 </Textdiv>
             ))}
 
         </Wrapper>
     );
+
 };
