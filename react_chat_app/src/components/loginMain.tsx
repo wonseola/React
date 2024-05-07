@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { get, ref, serverTimestamp, set } from "firebase/database";
 import { rtdb } from "../firebase";
@@ -53,8 +53,13 @@ const Input = styled.input`
     border-bottom:2px solid black;
     color: #000000;
     font-size:20px;
+    background-color:transparent;
     text-align:center;
     outline:none;
+    &:focus{
+        border-bottom:2px solid orange;
+
+    }
 `
 
 
@@ -89,9 +94,11 @@ export const SetNickname = () => {
         set(userRef, {
             users: name,
             color: randomColor,
+            online: true,
             createAt: serverTimestamp(),
         })
     }
+
 
     const checkIfUserExists = async (name: string) => {
         const userRef = ref(rtdb, 'users/' + name);
@@ -121,6 +128,14 @@ export const SetNickname = () => {
         setName(event.target.value);
     };
 
+    useEffect(() => {
+        const link = document.createElement("link");
+        link.href = "https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap";
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
+    }, []);
+
+
     return (
         <Loginlayout>
             <Wrapper>
@@ -130,16 +145,19 @@ export const SetNickname = () => {
                 </Emoji>
 
                 <Textdiv>
-                    <h2 style={{ fontSize: "50px", fontWeight: "500" }}>
-                        랜챗이름 머하지</h2>
-                    <h2 style={{ fontSize: "20px", marginTop: "10px" }}>
-                        닉네임을 입력해주세요!
+                    <h2 style={{ fontFamily: "'Nanum Pen Script', cursive", fontSize: "80px", fontWeight: "500", fontStyle: "normal" }}>
+                        RANDOM MONG
+                    </h2>
+                    {/* <h2 style={{ fontSize: "50px", fontWeight: "500" }}>
+                        RANDOM MONG</h2> */}
+                    <h2 style={{ fontFamily: "'Nanum Pen Script', cursive", fontSize: "50px", fontWeight: "500", fontStyle: "normal" }}>
+                        예상할 수 없는 대화
                     </h2>
                 </Textdiv>
                 <NickDiv>
                     <div></div>
                     <form onSubmit={handleLogin}>
-                        <Input type="text" value={name} onChange={handleInputChange} name="name" />
+                        <Input type="text" placeholder="닉네임을 입력하세요" value={name} onChange={handleInputChange} name="name" />
 
                         <Btn>&rarr;</Btn>
 

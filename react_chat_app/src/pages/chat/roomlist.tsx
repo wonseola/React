@@ -5,19 +5,20 @@ import { Myinfo } from "../../components/userstate";
 import { rtdb } from "../../firebase";
 import { onValue, ref } from "firebase/database";
 import { Logouticon } from "../../components/logout";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+
 
 
 const Wrapper = styled.div`
 
     display: grid;
-    grid-template-rows: repeat(2, auto) 10fr ;
+    grid-template-rows: repeat(5, auto) 2fr ;
 `
 
 const Icon = styled.img`
     width: 30px;
     height: 30px;
-
 
 
 `
@@ -36,48 +37,68 @@ const Listwrapper = styled.div`
     /* background-color:tan; */
 `
 
-const RoomItem = styled.div`
+const RoomItem = styled.div<{ selected: boolean }>`
   margin: 10px;
   padding: 10px;
   border: 1px solid black;
   border-radius: 5px;
   cursor: pointer;
+  &:hover{
+       
+    }
+    background-color: ${(props) => (props.selected ? "LightSalmon" : "transparent")};
+
+`;
+
+const RoomList = styled.div`
+    overflow-x:scroll;
+    /* background-color:gold; */
+    max-height:60vh;
+    height: 60vh;
+    
+`
+
+const Linkto = styled(Link)`
+  text-decoration: none;
+  max-width:100%;
+  color:black;
 `;
 
 
-export interface Room {
+
+interface Room {
     id: string;
     name: string;
     createAt: number;
+    username: string;
 }
 
 export const List = () => {
 
     const [addMode, setAddMode] = useState<boolean>(false);
     const [rooms, setRooms] = useState<Room[]>([]);
-
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+
+
 
     const handleRoomItemClick = (room: Room) => {
         setSelectedRoom(room);
-
     };
-
-
-
-
     useEffect(() => {
         const fetchRooms = async () => {
             const roomsRef = ref(rtdb, 'rooms/');
             onValue(roomsRef, (snapshot) => {
                 const roomData = snapshot.val();
+                // console.log(roomData)
                 if (roomData) {
-                    const roomList = Object.keys(roomData).map((room, time) => ({
-                        name: room,
-                        createAt: time,
-                        ...roomData[room],
+                    const roomList: Room[] = Object.entries(roomData).map(([roomId, roomInfo]: [string, any]) => ({
+                        id: roomId,
+                        createAt: roomInfo.createAt,
+                        name: roomInfo.room,
+                        username: roomInfo.user,
                     }));
-                    setRooms(roomList);
+                    const sortedRooms = roomList.sort((a, b) => b.createAt - a.createAt);
+                    setRooms(sortedRooms);
                 }
             });
         };
@@ -91,15 +112,16 @@ export const List = () => {
         <Wrapper>
             <Myinfo />
             <Top>
+
                 <Name>방 목록</Name>
                 <div>
                     <Icon
-                        src={addMode ? "./minus.png" : "./plus.png"}
+                        src={addMode ?
+                            "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Minus.png" : "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Plus.png"}
                         alt=""
                         className="add"
                         onClick={() => setAddMode((prev) => !prev)}
                     />
-                    <h1></h1>
                 </div>
             </Top>
 
@@ -110,30 +132,24 @@ export const List = () => {
                         <Createroom onSubmit={() => setAddMode(false)} />
                     </>
                 ) : (
-                    <div>
+                    <RoomList>
                         {rooms.map((room) => (
-                            <RoomItem key={room.name}
-                                onClick={() => handleRoomItemClick(room)}
-                            >
-                                {room.name}
-                            </RoomItem>
-                        ))}
-                    </div>
-                )}
-                <Link to={`/chat/${selectedRoom?.createAt}`}>
+                            <Linkto to={`/chat/${selectedRoom?.id}`}>
+                                <RoomItem key={room.id}
+                                    onClick={() => handleRoomItemClick(room)}
+                                    selected={selectedRoom ? selectedRoom.id === room.id : false}
+                                >
+                                    {room.name}
+                                </RoomItem>
+                            </Linkto>
 
-                    <button>asdf</button></Link>
+                        ))}
+                    </RoomList>
+                )}
+
             </Listwrapper>
 
             <Logouticon />
-            <div>
-                {selectedRoom && (
-                    <div>
-                        <p>방 name: {selectedRoom.name}</p>
-                        <p>방 Id: {selectedRoom.createAt}</p>
-                    </div>
-                )}
-            </div>
 
 
         </Wrapper>

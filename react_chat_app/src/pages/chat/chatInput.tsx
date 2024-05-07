@@ -1,82 +1,140 @@
-import styled from "styled-components"
-import EmojiPicker from "emoji-picker-react"
-import { useState } from "react"
-
+import styled from "styled-components";
+import EmojiPicker from "emoji-picker-react";
+import React, { useEffect, useState } from "react";
+import { ref, update, remove, set } from "firebase/database";
+import { rtdb } from "../../firebase";
+import { useParams } from "react-router-dom";
+import { Roomdata } from "./chatview";
 
 const Chatview = styled.div`
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-`
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+`;
 
-const Bottom = styled.div`
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* border-top: 1px solid black; */
-    gap: 20px;
-    margin-top: auto;
-`
+const Bottom = styled.form`
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: auto;
+  background-clip: content-box;
+  background-color: #0000001b;
+`;
 
 const Message = styled.input`
-    flex: 1;
-    background-color: rgba(0, 0, 0, 0.124);
-    border: none;
-    outline: none;
-    color: #000000;
-    padding: 20px;
-    border-radius: 10px;
-    font-size: 16px;
-`
+  flex: 1;
+  border: none;
+  outline: none;
+  color: #000000;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: transparent;
+`;
 
 const Send = styled.button`
-      background-color: tan;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-`
+  background-color: tan;
+  color: white;
+  padding: 10px 20px;
+  margin-right: 4%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
 
 const Emojii = styled.div`
-      position: relative;
-    cursor: pointer;
-`
+  position: relative;
+  cursor: pointer;
+`;
 
 const Picker = styled.div`
   position: absolute;
   bottom: 50px;
-`
-
+`;
 
 const Icon = styled.img`
-  width:40px;
-`
-
+  width: 40px;
+`;
 
 export const Chat = () => {
+  const param = useParams();
+  const id = param["*"];
+
   const [open, setOpen] = useState<boolean>(false);
   const [text, setText] = useState("");
 
   const handleEmoji = (event: any) => {
-    // console.log(event);
     setText((prev) => prev + event.emoji);
     setOpen(false);
-  }
+  };
 
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    setText("");
+    const userName = localStorage.getItem("userName");
+    const currentTime = Date.now();
+    const roomRef = ref(rtdb, `rooms/${id}/message`);
+    const newData: Roomdata = {
+      createAt: currentTime,
+      room: id || "",
+      user: userName || "aa",
+      message: text,
+    };
+    update(roomRef, { [currentTime]: newData })
+      .then(() => {
+        console.log("Message saved successfully!");
+      })
+      .catch((error) => {
+        console.error("Error saving message: ", error);
+      });
+  };
+
+
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+
+    if (userName) {
+      const userRef = ref(rtdb, `rooms/${id}/roomonline/${userName}`);
+      set(userRef, true)
+        .then(() => {
+          console.log(`${userName} joined the room.`);
+        })
+        .catch((error) => {
+          console.error("Error joining the room: ", error);
+        });
+    }
+
+    return () => {
+      if (userName) {
+        const roomRef = ref(rtdb, `rooms/${id}/roomonline/${userName}`);
+        remove(roomRef)
+          .then(() => {
+            console.log(`${userName} left the room.`);
+          })
+          .catch((error) => {
+            console.error("Error leaving the room: ", error);
+          });
+      }
+    };
+  }, [id]);
 
   return (
     <Chatview>
-      <Bottom>
-        <Message type="text"
+      <Bottom onSubmit={handleSend}>
+        <Message
+          type="text"
           placeholder="Type a message . . ."
           onChange={(event) => setText(event.target.value)}
           value={text}
         />
         <Emojii className="emoji">
-          <Icon src="./emoji.png" alt=""
-            onClick={() => setOpen(prev => !prev)} />
+          <Icon
+            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Grinning%20Face.png"
+            alt=""
+            onClick={() => setOpen((prev) => !prev)}
+          />
           <Picker className="picker">
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </Picker>
@@ -84,6 +142,5 @@ export const Chat = () => {
         <Send>Send</Send>
       </Bottom>
     </Chatview>
-  )
-
-}
+  );
+};

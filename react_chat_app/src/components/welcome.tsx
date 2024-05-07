@@ -1,21 +1,27 @@
-import { useState, useEffect } from 'react';
+import styled from "styled-components";
+
+
+const Wrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    flex-direction:column;
+`
+
+const Img = styled.img`
+    
+`
+
 
 export const Welcome = () => {
-    const [showPage, setShowPage] = useState(true);
 
-    useEffect(() => {
-        // 5초 후 페이지를 숨깁니다.
-        const timeout = setTimeout(() => {
-            setShowPage(false);
-        }, 5000);
-        return () => clearTimeout(timeout);
-    }, []);
+
 
     return (
-        <div>
-
-            {!showPage && <div>페이지가 사라졌습니다.</div>}
-        </div>
+        <Wrapper>
+            <h2>어떤 방에 들어갈가요~~ </h2>
+            <Img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Revolving%20Hearts.png" />
+        </Wrapper>
     );
 };
 

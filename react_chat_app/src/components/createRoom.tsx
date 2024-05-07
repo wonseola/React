@@ -2,6 +2,8 @@ import { ref, set, serverTimestamp } from "firebase/database";
 import { ChangeEvent, FormEvent, useState } from "react";
 import styled from "styled-components";
 import { rtdb } from "../firebase";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     flex-direction:column;
@@ -64,15 +66,20 @@ interface CreateroomProps {
 export const Createroom = ({ onSubmit }: CreateroomProps) => {
     const [room, setRoom] = useState("");
     const [error, setError] = useState("");
-    const user = localStorage.getItem("userName");
 
+    const navi = useNavigate();
+
+    const generateUUID = (): string => {
+        return uuidv4(); // UUID 생성
+    };
     const Makeroom = async () => {
-        const userRef = ref(rtdb, 'rooms/' + room);
+        const newUid: string = generateUUID();
+        const userRef = ref(rtdb, 'rooms/' + newUid);
         await set(userRef, {
             room,
-            user,
             createAt: serverTimestamp(),
         });
+        navi(`/chat/${newUid}`);
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -85,10 +92,10 @@ export const Createroom = ({ onSubmit }: CreateroomProps) => {
             onSubmit();
         }
     };
-
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setRoom(event.target.value);
     };
+
 
     return (
         <Wrapper>
@@ -98,6 +105,7 @@ export const Createroom = ({ onSubmit }: CreateroomProps) => {
                 <Btn>Go!</Btn>
             </Form>
             {error !== "" ? <Error>{error}</Error> : null}
+
         </Wrapper>
     );
 };
