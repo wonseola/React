@@ -4,7 +4,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { onValue, ref, remove, set } from "firebase/database";
 import { rtdb } from "../firebase";
 import { List } from "./chat/roomlist";
-import UserList from "../components/onlineUser";
 import { BrowserView, MobileView, isBrowser } from "react-device-detect";
 import { Mobile } from "../components/aa";
 
@@ -23,11 +22,14 @@ const Wrapper = styled.div`
   height: 90%;
   width: 100%;
   gap: 20px;
-  background-color: white;
+  background-color: #ffffff;
+
   border-radius: 10px;
-  padding: 20px;
+  /* padding: 20px; */
   box-shadow: 0px 0px 15px -2px #2d2b2b60;
 `;
+
+
 
 export const Layout = () => {
     const navigate = useNavigate();
@@ -110,7 +112,6 @@ export const Layout = () => {
                 {isBrowser ? (
                     <BrowserView>
                         <List />
-                        <UserList />
                     </BrowserView>
                 ) : (
                     <MobileView>

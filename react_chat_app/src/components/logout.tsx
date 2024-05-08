@@ -18,13 +18,12 @@ transition: background-color 0.3s ;
   &:hover {
     background-color: #ffb032;
 }
-margin-top: ${props => props.className === "logout" ? "auto" : "0"};
 `;
 
-const Icon = styled.img`
-    width: 50px;
-    height: 50px;
-`
+// const Icon = styled.img`
+//     width: 50px;
+//     height: 50px;
+// `
 
 
 export const Logouticon = () => {
@@ -60,7 +59,8 @@ export const Logouticon = () => {
     return (
         <>
             <Logout className="logout" onClick={() => onLogOut("이건 로그아웃이다")}>
-                <Icon src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Back%20Arrow.png" />
+                {/* <Icon src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Back%20Arrow.png" /> */}
+                <h2>로그아웃 버튼</h2>
             </Logout>
         </>
     )

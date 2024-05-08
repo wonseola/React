@@ -6,27 +6,28 @@ import { rtdb } from "../../firebase";
 import { onValue, ref } from "firebase/database";
 import { Logouticon } from "../../components/logout";
 import { Link } from "react-router-dom";
+import UserList from "../../components/onlineUser";
 
 
 
 
 const Wrapper = styled.div`
-
     display: grid;
     grid-template-rows: repeat(5, auto) 2fr ;
+    background-color:Cornsilk;
+    height:90vh;
+    padding: 5%;
+    border-radius:10px;
 `
 
 const Icon = styled.img`
     width: 30px;
     height: 30px;
-
-
 `
 
 const Top = styled.div`
     display: flex;
     justify-content:space-between;
-    margin:3%;
 `
 
 const Name = styled.h1`
@@ -35,18 +36,15 @@ const Name = styled.h1`
 
 const Listwrapper = styled.div`
     /* background-color:tan; */
+
 `
 
-const RoomItem = styled.div<{ selected: boolean }>`
+const RoomItem = styled.div`
   margin: 10px;
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid darkgoldenrod;
   border-radius: 5px;
   cursor: pointer;
-  &:hover{
-       
-    }
-    background-color: ${(props) => (props.selected ? "LightSalmon" : "transparent")};
 
 `;
 
@@ -70,7 +68,6 @@ interface Room {
     id: string;
     name: string;
     createAt: number;
-    username: string;
 }
 
 export const List = () => {
@@ -84,28 +81,30 @@ export const List = () => {
     const handleRoomItemClick = (room: Room) => {
         setSelectedRoom(room);
     };
+
+    useEffect(() => {
+        setSelectedRoom(null);
+    }, [selectedRoom]);
+
     useEffect(() => {
         const fetchRooms = async () => {
             const roomsRef = ref(rtdb, 'rooms/');
             onValue(roomsRef, (snapshot) => {
                 const roomData = snapshot.val();
-                // console.log(roomData)
                 if (roomData) {
                     const roomList: Room[] = Object.entries(roomData).map(([roomId, roomInfo]: [string, any]) => ({
                         id: roomId,
                         createAt: roomInfo.createAt,
                         name: roomInfo.room,
-                        username: roomInfo.user,
                     }));
                     const sortedRooms = roomList.sort((a, b) => b.createAt - a.createAt);
                     setRooms(sortedRooms);
                 }
             });
         };
+
         fetchRooms();
     }, []);
-
-
 
 
     return (
@@ -137,7 +136,6 @@ export const List = () => {
                             <Linkto key={room.id} to={`/chat/${room.id}`}>
                                 <RoomItem
                                     onClick={() => handleRoomItemClick(room)}
-                                    selected={selectedRoom ? selectedRoom.id === room.id : false}
                                 >
                                     {room.name}
                                 </RoomItem>
@@ -147,9 +145,8 @@ export const List = () => {
                 )}
 
             </Listwrapper>
-
+            <UserList />
             <Logouticon />
-
 
         </Wrapper>
     )

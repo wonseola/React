@@ -4,10 +4,8 @@ import { Chat } from "./chat/chatInput"
 
 
 const Contents = styled.div`
-display: grid;
-grid-template-rows: 1fr auto;
-padding-left: 20px;
-border-left:solid 1px black;
+display: flex;
+flex-direction:column;
 `
 
 export const Messages = () => {

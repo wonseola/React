@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { ref, update, remove, set } from "firebase/database";
 import { rtdb } from "../../firebase";
 import { useParams } from "react-router-dom";
-import { Roomdata } from "./chatview";
 
 const Chatview = styled.div`
   flex: 2;
@@ -13,7 +12,7 @@ const Chatview = styled.div`
 `;
 
 const Bottom = styled.form`
-  padding: 20px;
+  /* padding: 20px; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,6 +20,7 @@ const Bottom = styled.form`
   margin-top: auto;
   background-clip: content-box;
   background-color: #0000001b;
+  border-radius:0 0 10px 0 ;
 `;
 
 const Message = styled.input`
@@ -58,6 +58,13 @@ const Icon = styled.img`
   width: 40px;
 `;
 
+interface Roomdata {
+  createAt: number;
+  room: string;
+  user: string;
+  message: string;
+}
+
 export const Chat = () => {
   const param = useParams();
   const id = param["*"];
@@ -83,12 +90,6 @@ export const Chat = () => {
       message: text,
     };
     update(roomRef, { [currentTime]: newData })
-      .then(() => {
-        console.log("Message saved successfully!");
-      })
-      .catch((error) => {
-        console.error("Error saving message: ", error);
-      });
   };
 
 
