@@ -46,14 +46,10 @@ export const Layout = () => {
         };
 
         const logoutUser = async () => {
-            const ok = confirm("입력이 없어서 로그아웃 됩니당~~");
-            if (ok) {
-                localStorage.removeItem("userName");
-                set(onlineRef, false);
-                navigate("/");
-            } else {
-                return;
-            }
+
+            localStorage.removeItem("userName");
+            set(onlineRef, false);
+            navigate("/");
         };
 
         const activityHandler = () => {
